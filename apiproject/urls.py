@@ -19,11 +19,12 @@ from rest_framework import routers
 from taskapp.views import TaskViewSet
 from taskapp.test import test
 
-router = routers.DefaultRouter()
-router.register('task', TaskViewSet)
+# router = routers.DefaultRouter()
+# router.register('task', TaskViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(router.urls)),
+    # path('', include(router.urls)),
     path('test/', test),
+    path('api/', TaskViewSet.as_view()),
 ]
