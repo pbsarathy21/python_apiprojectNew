@@ -38,11 +38,87 @@ class TaskViewSet(APIView):
             return Response({'status': 'error', 'message': 'task_name already exists'})
         else:
             data = Task.objects.create(task_name=name, task_desc=desc)
-            my_data = {'id': data.id, 'task_name':data.task_name, 'task_desc': data.task_desc}
+            my_data = {'id': data.id, 'task_name': data.task_name, 'task_desc': data.task_desc}
             my_list = [my_data]
             return Response({'data': my_list})
 
+    @staticmethod
+    def update(request, pk):
+        return Response({'status': 'success', 'message': 'updated'})
 
+
+class Path(APIView):
+    def get(self, request, pk):
+        try:
+            data = Task.objects.get(id=pk)
+            return Response({'task_name': data.task_name})
+        except Task.DoesNotExist:
+            return Response({'error': 'no data found'})
+
+    def delete(self, request, pk):
+        try:
+            data = Task.objects.filter(id=pk).delete()
+            return Response({'messages': 'deleted successfully'})
+        except Task.DoesNotExist:
+            return Response({'error': 'no data found'})
+
+    def update(self, request):
+        id_value = request.PUT.get("id", "")
+        name = request.PUT.get("task_name", "")
+        desc = request.PUT.get("task_desc", "")
+
+        if not id_value:
+            return Response({'message': 'id is missing'})
+        elif not name or not desc:
+            return Response({'message': 'please specify values to update'})
+        else:
+            try:
+                update = Task.objects.get(id=id_value)
+                update.task_name = name
+                update.task_desc = desc
+
+                value = Task.objects.get(id=id_value)
+                my_list = [{'id': value.id, 'task_name': value.task_name, 'task_desc': value.task_desc}]
+                return Response({'message': 'updated successfully', 'data': my_list})
+            except Task.DoesNotExist:
+                return Response({'message': 'no data exists'})
+
+
+class TaskApi(APIView):
+    @staticmethod
+    def get(request):
+        data = Task.objects.all()
+        my_list = []
+        for x in data:
+            my_dict = {'id': x.id,
+                       'task_name': x.task_name,
+                       'task_desc': x.task_desc}
+            my_list.append(my_dict)
+        return Response({'data': my_list})
+
+    def update(self, request):
+        id_value = request.PUT.get("id", "")
+        name = request.PUT.get("task_name", "")
+        desc = request.PUT.get("task_desc", "")
+
+        if not id_value:
+            return Response({'message': 'id is missing'})
+        elif not name or not desc:
+            return Response({'message': 'please specify values to update'})
+        else:
+            try:
+                update = Task.objects.get(id=id_value)
+                update.task_name = name
+                update.task_desc = desc
+
+                value = Task.objects.get(id=id_value)
+                my_list = [{'id': value.id, 'task_name': value.task_name, 'task_desc': value.task_desc}]
+                return Response({'message': 'updated successfully', 'data': my_list})
+            except Task.DoesNotExist:
+                return Response({'message': 'no data exists'})
+
+
+    # def put(self, request, pk):
 
     # def retrieve(self, request: Request, *args: Any, **kwargs: Any):
     #
