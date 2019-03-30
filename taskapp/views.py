@@ -1,13 +1,7 @@
-from typing import Any
-
-from django.shortcuts import render
-from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Task
-from rest_framework import viewsets
-from .serializers import TaskSerializer
 
 
 # Create your views here.
@@ -29,6 +23,9 @@ class TaskViewSet(APIView):
 
         name = request.POST.get("task_name", "")
         desc = request.POST.get("task_desc", "")
+        image_save = request.FILES.get("image")
+        # image.save()
+
 
         if not name:
             return Response({'status': 'error', 'message': 'The required fields are task_name and task_desc'})
@@ -37,10 +34,21 @@ class TaskViewSet(APIView):
         elif Task.objects.filter(task_name=name).exists():
             return Response({'status': 'error', 'message': 'task_name already exists'})
         else:
-            data = Task.objects.create(task_name=name, task_desc=desc)
+            data = Task.objects.create(task_name=name, task_desc=desc, image=image_save)
             my_data = {'id': data.id, 'task_name':data.task_name, 'task_desc': data.task_desc}
             my_list = [my_data]
-            return Response({'data': my_list})
+
+            try:
+                from PIL import Image, ImageOps
+            except ImportError:
+                import Image
+                import ImageOps
+            image = Image.open(image_save)
+            imageresize = image.resize((600, 600), Image.ANTIALIAS)
+            image_url = 'taskapp/media/images/' + 'hai.png'
+            imageresize.save(image_url, quality=75)
+
+            return Response({'image': image_url, 'data': my_list})
 
 
 

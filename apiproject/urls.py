@@ -16,8 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+
+from django.conf.urls.static import static
+from django.conf import settings
 from taskapp.views import TaskViewSet
 from taskapp.test import test
+
 
 # router = routers.DefaultRouter()
 # router.register('task', TaskViewSet)
@@ -27,4 +31,4 @@ urlpatterns = [
     # path('', include(router.urls)),
     path('test/', test),
     path('api/', TaskViewSet.as_view()),
-]
+]+static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
