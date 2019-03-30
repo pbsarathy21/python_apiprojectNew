@@ -36,8 +36,8 @@ class TaskViewSet(APIView):
         else:
             data = Task.objects.create(task_name=name, task_desc=desc, image=image_save)
             my_data = {'id': data.id, 'task_name':data.task_name, 'task_desc': data.task_desc}
-            data = Task.objects.create(task_name=name, task_desc=desc)
-            my_data = {'id': data.id, 'task_name': data.task_name, 'task_desc': data.task_desc}
+            # data = Task.objects.create(task_name=name, task_desc=desc)
+            # my_data = {'id': data.id, 'task_name': data.task_name, 'task_desc': data.task_desc}
             my_list = [my_data]
 
             try:
