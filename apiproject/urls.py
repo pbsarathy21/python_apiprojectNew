@@ -20,6 +20,8 @@ from rest_framework import routers
 from django.conf.urls.static import static
 from django.conf import settings
 from taskapp.views import TaskViewSet
+from taskapp.views import Path
+from taskapp.views import TaskApi
 from taskapp.test import test
 
 
@@ -31,4 +33,6 @@ urlpatterns = [
     # path('', include(router.urls)),
     path('test/', test),
     path('api/', TaskViewSet.as_view()),
+    path('path/<int:pk>', Path.as_view()),
+    path('path/', TaskApi.as_view()),
 ]+static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
